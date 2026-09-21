@@ -48,8 +48,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(vite@8.2.2(@types/node@26.4.0)(esbuild@0.28.1)(jiti@2.7.0))
       '@wealthfolio/addon-dev-tools':
-        specifier: ^3.7.0
-        version: 3.7.0(supports-color@7.2.0)
+        specifier: ^3.8.0
+        version: 3.8.0(supports-color@7.2.0)
       '@wealthfolio/addon-sdk':
         specifier: ^3.7.0
         version: 3.7.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -1448,8 +1448,8 @@ packages:
   '@vitest/spy@5.0.0':
     resolution: {integrity: sha512-uy+luWBAPw9XfthoHi5AkfHUnuPYEESjl0p/r+meoBnU8bxg5GDQ3Ey8MjcJ6sqahkL4PFyrvfMJJBw7LbU06g==}
 
-  '@wealthfolio/addon-dev-tools@3.7.0':
-    resolution: {integrity: sha512-BVCHMj8Y4W+fqKqOELQ+UQNSJIH0VxIG10iEk9jVK6OoyCxdQaILY6hHq5FtdFrw6DWrYq1/wge6EaDDODxWZg==}
+  '@wealthfolio/addon-dev-tools@3.8.0':
+    resolution: {integrity: sha512-w3l+KLnAWswgthqH50NLBEzK+7lFhLihocmzhhEYyOAUTfpa2Tx7wRxbJ7RxBILQkCG0wa+lnUQS7DI8U4l3dw==}
     engines: {node: '>=20.0.0'}
     hasBin: true
 
@@ -4948,7 +4948,7 @@ snapshots:
 
   '@vitest/spy@5.0.0': {}
 
-  '@wealthfolio/addon-dev-tools@3.7.0(supports-color@7.2.0)':
+  '@wealthfolio/addon-dev-tools@3.8.0(supports-color@7.2.0)':
     dependencies:
       chokidar: 4.0.3
       commander: 14.0.3

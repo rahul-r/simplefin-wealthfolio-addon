@@ -47,7 +47,7 @@
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.1.1",
-    "@wealthfolio/addon-dev-tools": "^3.7.0",
+    "@wealthfolio/addon-dev-tools": "^3.8.0",
     "@wealthfolio/addon-sdk": "^3.7.0",
     "@wealthfolio/ui": "^3.6.0",
     "date-fns": "^4.1.0",

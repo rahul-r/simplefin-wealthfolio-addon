@@ -143,10 +143,13 @@ async function syncOne(
 
   try {
     if (mapping.mode === 'HOLDINGS') {
+      const destinationCurrency =
+        wfAccountCurrencies.get(mapping.wfAccountId) ?? sfAccount.currency;
       const { imported, skipped, unresolvedSymbols } = await syncHoldingsAccount(
         api,
         mapping,
         sfAccount,
+        destinationCurrency,
       );
       const balance = compareBalances(
         sfAccount.balance,

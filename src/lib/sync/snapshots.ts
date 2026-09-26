@@ -10,7 +10,11 @@ import { subtractDecimal, sumDecimal } from './openingBalance';
  * for a calendar day, not a moment, and `checkImport` hands its idempotency
  * signal back as `existingDates`, keyed the same way.
  */
-export function toSnapshotInput(sfAccount: SfAccount): SnapshotInput {
+export function toSnapshotInput(
+  sfAccount: SfAccount,
+  destinationCurrency = sfAccount.currency,
+): SnapshotInput {
+  const currency = sfAccount.currency || destinationCurrency;
   const holdings = sfAccount.holdings.filter(
     // A position with no symbol or no share count cannot be resolved to a
     // Wealthfolio asset; sending it would fail validation for the whole batch.
@@ -21,7 +25,7 @@ export function toSnapshotInput(sfAccount: SfAccount): SnapshotInput {
     symbol: h.symbol,
     quantity: h.shares as string,
     avgCost: h.purchasePrice ?? undefined,
-    currency: h.currency ?? sfAccount.currency,
+    currency: h.currency ?? currency,
   }));
 
   const marketValues = holdings.map((h) => h.marketValue);
@@ -32,7 +36,7 @@ export function toSnapshotInput(sfAccount: SfAccount): SnapshotInput {
   return {
     date: isoDate(sfAccount.balanceDate),
     positions,
-    cashBalances: cashBalance === null ? {} : { [sfAccount.currency]: cashBalance },
+    cashBalances: cashBalance === null ? {} : { [currency]: cashBalance },
   };
 }
 
@@ -40,12 +44,13 @@ export async function syncHoldingsAccount(
   api: HostAPI,
   mapping: AccountMapping,
   sfAccount: SfAccount,
+  destinationCurrency = sfAccount.currency,
 ): Promise<{ imported: number; skipped: number; unresolvedSymbols: string[] }> {
   if (sfAccount.holdings.length === 0) {
     return { imported: 0, skipped: 0, unresolvedSymbols: [] };
   }
 
-  const snapshot = toSnapshotInput(sfAccount);
+  const snapshot = toSnapshotInput(sfAccount, destinationCurrency);
   const check = await api.snapshots.checkImport(mapping.wfAccountId, [snapshot]);
 
   if (check.validationErrors.length > 0) {

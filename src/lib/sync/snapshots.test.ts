@@ -51,6 +51,16 @@ describe('toSnapshotInput', () => {
     expect(snapshot.cashBalances).toEqual({});
   });
 
+  it('falls back to the Wealthfolio account currency when SimpleFIN omits currency', () => {
+    const sfAccount = {
+      ...account([holding({ currency: null })], '2500.00'),
+      currency: '',
+    };
+    const snapshot = toSnapshotInput(sfAccount as never, 'USD');
+    expect(snapshot.positions[0]?.currency).toBe('USD');
+    expect(snapshot.cashBalances).toEqual({ USD: '500.00' });
+  });
+
   it('drops holdings with no symbol, which cannot be resolved to an asset', () => {
     const snapshot = toSnapshotInput(account([holding({ symbol: '' })]) as never);
     expect(snapshot.positions).toEqual([]);

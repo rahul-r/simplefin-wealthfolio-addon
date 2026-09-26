@@ -2,6 +2,7 @@ import type { HostAPI, SnapshotInput } from '@wealthfolio/addon-sdk';
 import type { SfAccount } from '../simplefin/parse';
 import type { AccountMapping } from '../storage/config';
 import { isoDate, toIsoDateOnly } from './activities';
+import { subtractDecimal, sumDecimal } from './openingBalance';
 
 /**
  * A snapshot's `date` stays a bare `YYYY-MM-DD` — unlike an activity's, which
@@ -10,21 +11,28 @@ import { isoDate, toIsoDateOnly } from './activities';
  * signal back as `existingDates`, keyed the same way.
  */
 export function toSnapshotInput(sfAccount: SfAccount): SnapshotInput {
-  const positions = sfAccount.holdings
+  const holdings = sfAccount.holdings.filter(
     // A position with no symbol or no share count cannot be resolved to a
     // Wealthfolio asset; sending it would fail validation for the whole batch.
-    .filter((h) => h.symbol !== '' && h.shares !== null)
-    .map((h) => ({
-      symbol: h.symbol,
-      quantity: h.shares as string,
-      avgCost: h.purchasePrice ?? undefined,
-      currency: h.currency ?? sfAccount.currency,
-    }));
+    (h) => h.symbol !== '' && h.shares !== null,
+  );
+
+  const positions = holdings.map((h) => ({
+    symbol: h.symbol,
+    quantity: h.shares as string,
+    avgCost: h.purchasePrice ?? undefined,
+    currency: h.currency ?? sfAccount.currency,
+  }));
+
+  const marketValues = holdings.map((h) => h.marketValue);
+  const cashBalance = marketValues.every((value): value is string => value !== null)
+    ? subtractDecimal(sfAccount.balance, sumDecimal(marketValues))
+    : null;
 
   return {
     date: isoDate(sfAccount.balanceDate),
     positions,
-    cashBalances: { [sfAccount.currency]: sfAccount.balance },
+    cashBalances: cashBalance === null ? {} : { [sfAccount.currency]: cashBalance },
   };
 }
 

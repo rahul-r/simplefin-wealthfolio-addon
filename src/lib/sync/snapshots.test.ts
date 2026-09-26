@@ -41,9 +41,14 @@ describe('toSnapshotInput', () => {
     ]);
   });
 
-  it('carries the account cash balance', () => {
-    const snapshot = toSnapshotInput(account([holding()]) as never);
+  it('derives cash by subtracting holdings from the account balance', () => {
+    const snapshot = toSnapshotInput(account([holding()], '2500.00') as never);
     expect(snapshot.cashBalances).toEqual({ USD: '500.00' });
+  });
+
+  it('omits cash when a holding has no market value', () => {
+    const snapshot = toSnapshotInput(account([holding({ marketValue: null })], '2000.00') as never);
+    expect(snapshot.cashBalances).toEqual({});
   });
 
   it('drops holdings with no symbol, which cannot be resolved to an asset', () => {

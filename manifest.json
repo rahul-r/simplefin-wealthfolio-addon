@@ -83,9 +83,15 @@
       "category": "portfolio",
       "functions": [
         { "name": "recalculate", "isDeclared": true, "isDetected": false },
+        { "name": "getHoldings", "isDeclared": true, "isDetected": false },
         { "name": "getLatestValuations", "isDeclared": true, "isDetected": false }
       ],
-      "purpose": "Recalculate a CASH account's balance after backfilling its full history, so the opening-balance gap against SimpleFIN can be measured accurately."
+      "purpose": "Read holdings for SimpleFIN broker-price fallback and recalculate CASH accounts after history backfill."
+    },
+    {
+      "category": "quotes",
+      "functions": [{ "name": "update", "isDeclared": true, "isDetected": false }],
+      "purpose": "Store SimpleFIN market values as broker fallback quotes for holdings without provider pricing."
     }
   ],
   "keywords": ["wealthfolio", "addon", "simplefin", "sync", "banking"],
